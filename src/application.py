@@ -1,7 +1,7 @@
 from flask import Flask, Response, request
 from datetime import datetime
 import json
-from columbia_student_resource import ColumbiaStudentResource
+from reservation_resource import ReservationResource
 from flask_cors import CORS
 
 # Create the Flask application object.
@@ -24,17 +24,36 @@ def get_health():
 
     # DFF TODO Explain status codes, content type, ... ...
 
-
-    msg = ColumbiaStudentResource.TestConnection()
     result = Response(json.dumps(msg), status=200, content_type="application/json")
 
     return result
 
 
+@app.route("/api/reservations/", methods=["GET"])
+def get_all_reservation():
+    result = ReservationResource.get_all_reservation()
+    print(result)
+    if result:
+        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+    return rsp
+
+
+@app.route("/api/reservations/<phone>", methods=["GET"])
+def get_reservation_by_phone(phone):
+    result = ReservationResource.get_reservation_by_phone(phone)
+    print(result)
+    if result:
+        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+    return rsp
+
 @app.route("/api/students/<uni>", methods=["GET"])
 def get_student_by_uni(uni):
 
-    result = ColumbiaStudentResource.get_by_key(uni)
+    result = ReservationResource.get_by_key(uni)
     print(result)
     if result:
         rsp = Response(json.dumps(result), status=200, content_type="application.json")

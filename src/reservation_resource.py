@@ -3,7 +3,7 @@ import pymysql
 import os
 
 
-class ColumbiaStudentResource:
+class ReservationResource:
 
     def __int__(self):
         pass
@@ -26,12 +26,22 @@ class ColumbiaStudentResource:
         return conn
 
     @staticmethod
-    def TestConnection():
+    def get_all_reservation():
 
-        sql = "SELECT * FROM Registration.registration";
-        conn = ColumbiaStudentResource._get_connection()
+        sql = "SELECT * FROM Reservation.reservation"
+        conn = ReservationResource._get_connection()
         cur = conn.cursor()
         res = cur.execute(sql)
         result = cur.fetchall()
 
+        return result
+
+    @staticmethod
+    def get_reservation_by_phone(phone):
+
+        sql = "SELECT * FROM Reservation.reservation WHERE phone = {}".format(phone)
+        conn = ReservationResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql)
+        result = cur.fetchall()
         return result
