@@ -50,16 +50,18 @@ def get_reservation_by_phone(phone):
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
 
-@app.route("/api/students/<uni>", methods=["GET"])
-def get_student_by_uni(uni):
-
-    result = ReservationResource.get_by_key(uni)
+@app.route("/api/reservations/<phone>/<table_id>", methods=["PUT"])
+def reserve_table_by_phone(phone, table_id):
+    print(request.method)
+    print(phone, table_id)
+    #TODO: This is not finished!
+    
+    result = ReservationResource.get_reservation_by_phone(phone)
     print(result)
     if result:
         rsp = Response(json.dumps(result), status=200, content_type="application.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
-
     return rsp
 
 

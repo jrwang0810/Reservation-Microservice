@@ -45,3 +45,13 @@ class ReservationResource:
         res = cur.execute(sql)
         result = cur.fetchall()
         return result
+
+    @staticmethod
+    def insert_reservation_by_phone(phone):
+
+        sql = "SELECT * FROM Reservation.reservation WHERE phone = {}".format(phone)
+        conn = ReservationResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql)
+        result = cur.fetchall()
+        return result
