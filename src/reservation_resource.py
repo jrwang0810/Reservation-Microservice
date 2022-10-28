@@ -53,3 +53,11 @@ class ReservationResource:
         cur = conn.cursor()
         res = cur.execute(sql)
         return res
+
+    @staticmethod
+    def delete_reservation(phone, table_id):
+        sql = "DELETE FROM Reservation.reservation Where phone = '{}' and table_id = {}".format(phone, table_id)
+        conn = ReservationResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql)
+        return res
