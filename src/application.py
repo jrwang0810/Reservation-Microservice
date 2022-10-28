@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 from reservation_resource import ReservationResource
 from flask_cors import CORS
+from datetime import datetime
 
 # Create the Flask application object.
 app = Flask(__name__,
@@ -55,11 +56,12 @@ def reserve_table_by_phone(phone, table_id):
     print(request.method)
     print(phone, table_id)
     #TODO: This is not finished!
-    
-    result = ReservationResource.get_reservation_by_phone(phone)
+    current = datetime.now()
+
+    result = ReservationResource.create_reservation(phone, table_id, current)
     print(result)
     if result:
-        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+        rsp = Response("Success on inserting for {}".format(phone), status=200, content_type="application.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
