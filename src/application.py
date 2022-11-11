@@ -35,7 +35,7 @@ def get_all_reservation():
     result = ReservationResource.get_all_reservation()
     print(result)
     if result:
-        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+        rsp = Response(json.dumps(result, default = str), status=200, content_type="application.json") # set default = str, otherwise result not json serializable
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
@@ -46,7 +46,7 @@ def get_reservation_by_phone(phone):
     result = ReservationResource.get_reservation_by_phone(phone)
     print(result)
     if result:
-        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+        rsp = Response(json.dumps(result, default = str), status=200, content_type="application.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
