@@ -1,6 +1,7 @@
 from flask import Flask, Response, request
 from datetime import datetime
 import json
+import requests
 from reservation_resource import ReservationResource
 from flask_cors import CORS
 from datetime import datetime
@@ -35,7 +36,7 @@ def get_all_reservation():
     result = ReservationResource.get_all_reservation()
     print(result)
     if result:
-        rsp = Response(json.dumps(result, default = str), status=200, content_type="application.json") # set default = str, otherwise result not json serializable
+        rsp = Response(json.dumps(result, indent=4, sort_keys=True, default=str), status=200, content_type="application.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
@@ -46,7 +47,7 @@ def get_reservation_by_phone(phone):
     result = ReservationResource.get_reservation_by_phone(phone)
     print(result)
     if result:
-        rsp = Response(json.dumps(result, default = str), status=200, content_type="application.json")
+        rsp = Response(json.dumps(result, indent=4, sort_keys=True, default=str), status=200, content_type="application.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
@@ -56,13 +57,27 @@ def reserve_table_by_phone(phone, table_id):
     print(request.method)
     print(phone, table_id)
     current = datetime.now()
-
-    result = ReservationResource.create_reservation(phone, table_id, current)
-    print(result)
-    if result:
-        rsp = Response("Success on inserting for {}".format(phone), status=200, content_type="application.json")
+    year = current.year
+    month = current.month
+    day = current.day
+    # year = 2022
+    # month = 1
+    # day = 5
+    token = "477ad380984d434598e1a0c5f3c998b1"
+    response = requests.get(
+        "https://holidays.abstractapi.com/v1/?api_key={}&country=US&year={}&month={}&day={}".format(token,year,month,day))
+    print(response.status_code)
+    print(response.content)
+    data = json.loads(response.content)
+    if not data:
+        result = ReservationResource.create_reservation(phone, table_id, current)
+        print(result)
+        if result:
+            rsp = Response("Success on inserting for {}".format(phone), status=200, content_type="application.json")
+        else:
+            rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     else:
-        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+        rsp = Response("Public Holiday: {}".format(data[0]["name"]), status=404, content_type="text/plain")
     return rsp
 
 @app.route("/api/reservations/<phone>/<table_id>/delete", methods=["DELETE"])
