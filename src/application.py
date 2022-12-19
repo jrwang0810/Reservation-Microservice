@@ -42,9 +42,9 @@ def get_all_reservation():
     return rsp
 
 
-@app.route("/api/reservations/<phone>", methods=["GET"])
-def get_reservation_by_phone(phone):
-    result = ReservationResource.get_reservation_by_phone(phone)
+@app.route("/api/reservations/<email>", methods=["GET"])
+def get_reservation_by_email(email):
+    result = ReservationResource.get_reservation_by_email(email)
     print(result)
     if result:
         rsp = Response(json.dumps(result, indent=4, sort_keys=True, default=str), status=200, content_type="application.json")
@@ -52,14 +52,15 @@ def get_reservation_by_phone(phone):
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
 
-@app.route("/api/reservations/<phone>/<table_id>", methods=["PUT"])
-def reserve_table_by_phone(phone, table_id):
+@app.route("/api/reservations/<email>/<table_id>", methods=["PUT"])
+def reserve_table_by_email(email, table_id):
     print(request.method)
-    print(phone, table_id)
+    print(email, table_id)
     current = datetime.now()
     year = current.year
     month = current.month
     day = current.day
+    # current = "2022-01-05"
     # year = 2022
     # month = 1
     # day = 5
@@ -70,25 +71,36 @@ def reserve_table_by_phone(phone, table_id):
     print(response.content)
     data = json.loads(response.content)
     if not data:
-        result = ReservationResource.create_reservation(phone, table_id, current)
+        result = ReservationResource.create_reservation(email, table_id, current)
         print(result)
         if result:
-            rsp = Response("Success on inserting for {}".format(phone), status=200, content_type="application.json")
+            rsp = Response("Success on inserting for {}".format(email), status=200, content_type="application.json")
         else:
             rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     else:
         rsp = Response("Public Holiday: {}".format(data[0]["name"]), status=404, content_type="text/plain")
     return rsp
 
-@app.route("/api/reservations/<phone>/<table_id>/delete", methods=["DELETE"])
-def delete_table_by_phone(phone, table_id):
+@app.route("/api/reservations/<email>/<table_id>/delete", methods=["DELETE"])
+def delete_table_by_email(email, table_id):
 
-    result = ReservationResource.delete_reservation(phone, table_id)
+    result = ReservationResource.delete_reservation(email, table_id)
     print(result)
     if result:
-        rsp = Response("Success on deleting for {}".format(phone), status=200, content_type="application.json")
+        rsp = Response("Success on deleting for {}".format(email), status=200, content_type="application.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+    return rsp
+
+@app.route("/api/reservations/delete", methods=["DELETE"])
+def delete_all_table():
+
+    result = ReservationResource.delete_all_reservation()
+    print(result)
+    if not result:
+        rsp = Response("Success on deleting for all", content_type="application.json")
+    else:
+        rsp = Response("some error occurs", status=404, content_type="text/plain")
     return rsp
 
 if __name__ == "__main__":
