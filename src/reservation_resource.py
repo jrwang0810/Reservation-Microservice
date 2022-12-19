@@ -37,9 +37,9 @@ class ReservationResource:
         return result
 
     @staticmethod
-    def get_reservation_by_phone(phone):
+    def get_reservation_by_email(email):
 
-        sql = "SELECT * FROM Reservation.reservation WHERE phone = {}".format(phone)
+        sql = "SELECT * FROM Reservation.reservation WHERE email = {}".format(email)
         conn = ReservationResource._get_connection()
         cur = conn.cursor()
         res = cur.execute(sql)
@@ -47,16 +47,24 @@ class ReservationResource:
         return result
 
     @staticmethod
-    def create_reservation(phone, table_id, date):
-        sql = "INSERT INTO Reservation.reservation VALUES ('{}', {}, '{}')".format(phone, table_id, date)
+    def create_reservation(email, table_id, date):
+        sql = "INSERT INTO Reservation.reservation VALUES ('{}', {}, '{}')".format(email, table_id, date)
         conn = ReservationResource._get_connection()
         cur = conn.cursor()
         res = cur.execute(sql)
         return res
 
     @staticmethod
-    def delete_reservation(phone, table_id):
-        sql = "DELETE FROM Reservation.reservation Where phone = '{}' and table_id = {}".format(phone, table_id)
+    def delete_reservation(email, table_id):
+        sql = "DELETE FROM Reservation.reservation Where email = '{}' and table_id = {}".format(email, table_id)
+        conn = ReservationResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql)
+        return res
+
+    @staticmethod
+    def delete_all_reservation():
+        sql = "DELETE FROM Reservation.reservation"
         conn = ReservationResource._get_connection()
         cur = conn.cursor()
         res = cur.execute(sql)
