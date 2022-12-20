@@ -78,7 +78,12 @@ def reserve_table_by_email(email, table_id):
         else:
             rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     else:
-        rsp = Response("Public Holiday: {}".format(data[0]["name"]), status=404, content_type="text/plain")
+        result = ReservationResource.create_reservation(email, table_id, current)
+        print(result)
+        if result:
+            rsp = Response("Public Holiday: {}. Check with restuarant about the opening time. Success on inserting for {}".format(data[0]["name"], email), status=200, content_type="application.json")
+        else:
+            rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
 
 @app.route("/api/reservations/<email>/<table_id>/delete", methods=["DELETE"])
