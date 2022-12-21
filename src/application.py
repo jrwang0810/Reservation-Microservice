@@ -97,6 +97,17 @@ def delete_table_by_email(email, table_id):
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     return rsp
 
+@app.route("/api/reservations/<email>/delete", methods=["DELETE"])
+def delete_table_only_by_email(email):
+
+    result = ReservationResource.delete_email_reservation(email)
+    print(result)
+    if result:
+        rsp = Response("Success on deleting for {}".format(email), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+    return rsp
+
 @app.route("/api/reservations/delete", methods=["DELETE"])
 def delete_all_table():
 
