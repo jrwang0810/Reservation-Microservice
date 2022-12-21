@@ -63,6 +63,14 @@ class ReservationResource:
         return res
 
     @staticmethod
+    def delete_email_reservation(email):
+        sql = "DELETE FROM Reservation.reservation Where email = '{}'".format(email)
+        conn = ReservationResource._get_connection()
+        cur = conn.cursor()
+        res = cur.execute(sql)
+        return res
+
+    @staticmethod
     def delete_all_reservation():
         sql = "DELETE FROM Reservation.reservation"
         conn = ReservationResource._get_connection()
